@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="fr.gdai.mybatis.mapper.DynamicSQLMapper">
+
+    <resultMap id="empResultMap" type="Emp">
+        <id property="empId" column="emp_id"/>
+        <result property="empName" column="emp_name"/>
+        <result property="empAge" column="emp_age"/>
+        <result property="empGender" column="emp_gender"/>
+        <result property="empEmail" column="emp_email"/>
+    </resultMap>
+
+<!--    List<Emp> getEmpByConditions(Emp emp);-->
+    <select id="getEmpByConditions" resultMap="empResultMap">
+        select * from t_emp where 1=1
+        <if test="empName != null and empName != ''">
+            and emp_name = #{empName}
+        </if>
+        <if test="empAge != null and empAge != ''">
+            and emp_age = #{empAge}
+        </if>
+        <if test="empGender != null and empGender != ''">
+            and emp_gender = #{empGender}
+        </if>
+        <if test="empEmail != null and empEmail != ''">
+            and emp_email = #{empEmail}
+        </if>
+    </select>
+
+    <!--    List<Emp> getEmpByConditionsWhereLabel(Emp emp);-->
+    <select id="getEmpByConditionsWhereLabel" resultMap="empResultMap">
+        select * from t_emp
+        <where>
+            <if test="empName != null and empName != ''">
+                and emp_name = #{empName}
+            </if>
+            <if test="empAge != null and empAge != ''">
+                and emp_age = #{empAge}
+            </if>
+            <if test="empGender != null and empGender != ''">
+                and emp_gender = #{empGender}
+            </if>
+            <if test="empEmail != null and empEmail != ''">
+                and emp_email = #{empEmail}
+            </if>
+        </where>
+    </select>
+
+<!--    List<Emp> getEmpByConditionsTrimLabel(Emp emp);-->
+    <select id="getEmpByConditionsTrimLabel" resultMap="empResultMap">
+        select * from t_emp
+        <trim prefix="where" suffix="" prefixOverrides="and|or" suffixOverrides="and|or">
+            <if test="empName != null and empName != ''">
+                and emp_name = #{empName}
+            </if>
+            <if test="empAge != null and empAge != ''">
+                and emp_age = #{empAge}
+            </if>
+            <if test="empGender != null and empGender != ''">
+                and emp_gender = #{empGender}
+            </if>
+            <if test="empEmail != null and empEmail != ''">
+                and emp_email = #{empEmail}
+            </if>
+        </trim>
+    </select>
+
+<!--    List<Emp> getEmpByConditionsChooseLabel(Emp emp);-->
+    <select id="getEmpByConditionsChooseLabel" resultMap="empResultMap">
+        select * from t_emp
+       <where>
+           <choose>
+               <when test="empName != null and empName != ''">
+                   emp_name = #{empName}
+               </when>
+               <when test="empAge != null and empAge != ''">
+                   emp_age = #{empAge}
+               </when>
+               <when test="empGender != null and empGender != ''">
+                   emp_gender = #{empGender}
+               </when>
+               <when test="empEmail != null and empEmail != ''">
+                   emp_email = #{empEmail}
+               </when>
+               <otherwise>
+                   1=1
+               </otherwise>
+           </choose>
+       </where>
+    </select>
+
+<!--    int insertManyEmps(@Param("emps") List<Emp> emps);-->
+    <insert id="insertManyEmps">
+        insert into t_emp values
+        <foreach collection="emps" item="emp" separator=",">
+            (null, #{emp.empName}, #{emp.empAge}, #{emp.empGender}, #{emp.empEmail}, #{emp.dept.deptId})
+        </foreach>
+    </insert>
+
+<!--    List<Emp> selectManyEmps(@Param("empIds") List<Integer> empIds);-->
+    <select id="selectManyEmps" resultMap="empResultMap">
+        select * from t_emp
+        <where>
+            <foreach collection="empIds" item="empId"
+                     open="emp_id in(" separator="," close=")">
+                #{empId}
+            </foreach>
+        </where>
+    </select>
+
+<!--    List<Dept> getAllDept();-->
+    <sql id="aliasDept">
+        dept_id as deptId, dept_name as deptName
+    </sql>
+    <select id="getAllDept" resultType="Dept">
+        select <include refid="aliasDept"/> from t_dept
+    </select>
+</mapper>

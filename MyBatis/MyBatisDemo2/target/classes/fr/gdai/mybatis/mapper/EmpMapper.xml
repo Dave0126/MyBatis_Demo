@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="fr.gdai.mybatis.mapper.EmpMapper">
+<!--    List<Emp> getAllEmp(); 此时因为数据库字段名与类中的属性名不同，所以无法匹配 -->
+    <select id="getAllEmpFault" resultType="Emp">
+        select * from t_emp
+    </select>
+
+<!--    List<Emp> getAllEmp(); -->
+    <select id="getAllEmpSol1" resultType="Emp">
+        <!-- 方法1：使用SQL中别名as的方法解决 -->
+        select emp_id empId, emp_name empName, emp_age empAge, emp_gender empGender, emp_email empEmail from t_emp
+        <!-- 方法2：在MyBatis核心设置中使用全剧配置标签开启自动映射 <settings> <setting name="mapUnderscoreToCamelCases" value="true"/> </settings> -->
+        <!-- 方法3：使用resultMap来自定义映射关系，如下所示 -->
+    </select>
+
+    <!--
+        resultMap: 自定义的map映射关系，id: 属性唯一标识，type: 设置映射关系中的实体类类型
+            property: type的实体类中的属性名     column: SQL中的字段名
+            <id> 设置主键的映射关系
+            <result> 设置非主键的映射关系
+            <association>
+            <collection>
+    -->
+    <resultMap id="empResultMap" type="Emp">
+        <id property="empId" column="emp_id"/>
+        <result property="empName" column="emp_name"/>
+        <result property="empAge" column="emp_age"/>
+        <result property="empGender" column="emp_gender"/>
+        <result property="empEmail" column="emp_email"/>
+    </resultMap>
+
+    <select id="getAllEmp" resultMap="empResultMap">
+        select * from t_emp
+    </select>
+
+    <!-- 方法一：级联属性赋值 -->
+    <resultMap id="empAndDeptResultMap_Many2One_Cascade" type="Emp">
+        <id property="empId" column="emp_id"/>
+        <result property="empName" column="emp_name"/>
+        <result property="empAge" column="emp_age"/>
+        <result property="empGender" column="emp_gender"/>
+        <result property="empEmail" column="emp_email"/>
+        <!-- 处理多对一的关系 -->
+        <result property="dept.deptId" column="dept_id"/>
+        <result property="dept.deptName" column="dept_name"/>
+    </resultMap>
+
+    <!--
+        方法二：Association 标签映射
+            <association>: 处理多对一的映射关系的标签
+            javaType: 对应property的实体类类型
+    -->
+    <resultMap id="empAndDeptResultMap_Many2One_Association" type="Emp">
+        <id property="empId" column="emp_id"/>
+        <result property="empName" column="emp_name"/>
+        <result property="empAge" column="emp_age"/>
+        <result property="empGender" column="emp_gender"/>
+        <result property="empEmail" column="emp_email"/>
+        <association property="dept" javaType="Dept">
+            <id property="deptId" column="dept_id"/>
+            <result property="deptName" column="dept_name"/>
+        </association>
+    </resultMap>
+
+<!--    List<Emp> getAllEmpAndDept();-->
+    <select id="getAllEmpAndDept" resultMap="empAndDeptResultMap_Many2One_Association">
+        select * from t_emp left join t_dept on t_emp.dept_id = t_dept.dept_id
+    </select>
+
+
+    <!--
+        (常用)方法三：分布查询
+
+    -->
+    <resultMap id="empAndDeptResultMap_Many2One_StepByStep" type="Emp">
+        <id property="empId" column="emp_id"/>
+        <result property="empName" column="emp_name"/>
+        <result property="empAge" column="emp_age"/>
+        <result property="empGender" column="emp_gender"/>
+        <result property="empEmail" column="emp_email"/>
+        <!-- 第 2 步查询 -->
+        <association property="dept"
+                     select="fr.gdai.mybatis.mapper.DeptMapper.getDeptBtDeptId"
+                     column="dept_id"/>
+    </resultMap>
+
+<!--    Emp getEmpAndDeptStepByStep(@Param("empId") int empId);-->
+    <!-- 第 1 步查询 -->
+    <select id="getEmpAndDeptStepByStep" resultMap="empAndDeptResultMap_Many2One_StepByStep">
+        select * from t_emp where emp_id = #{empId}
+    </select>
+
+<!--    List<Emp> getEmpsListByDeptId(@Param("DeptId") int DeptId);-->
+    <select id="getEmpsListByDeptId" resultMap="empResultMap">
+        select * from t_emp where dept_id = #{DeptId}
+    </select>
+</mapper>
