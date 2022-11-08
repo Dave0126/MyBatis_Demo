@@ -4,15 +4,13 @@ import fr.gdai.mybatis.utils.SqlSessionUtils;
 import org.apache.ibatis.session.SqlSession;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
-
-public class DeptTest {
+public class DeptMapperTest {
 
     @Test
-    public void testGetDeptBtDeptId() {
+    public void testGetDeptByDeptId() {
         SqlSession sqlSession = SqlSessionUtils.getSqlSession();
         DeptMapper deptMapper = sqlSession.getMapper(DeptMapper.class);
-        System.out.println(deptMapper.getDeptBtDeptId(1));
+        System.out.println(deptMapper.getDeptByDeptId(1));
     }
 
     @Test

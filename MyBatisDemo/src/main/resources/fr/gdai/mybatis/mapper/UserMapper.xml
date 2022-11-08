@@ -61,8 +61,8 @@
         select * from t_user where username = '${arg0}' and password = '${arg1}'
     </select>
 
-<!--    User selectUserByMap(Map<String, Object> map);-->
-    <select id="selectUserByMap" resultType="User">
+<!--    User selectUserByUsernameAndPassword(Map<String, Object> map);-->
+    <select id="selectUserByUsernameAndPassword" resultType="User">
         select * from t_user where username = #{username} and password = #{password}
     </select>
 

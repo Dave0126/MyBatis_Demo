@@ -9,8 +9,8 @@
         <result property="deptName" column="dept_name"/>
     </resultMap>
 
-<!--    Dept getDeptBtDeptId(@Param("deptId") int deptId);-->
-    <select id="getDeptBtDeptId" resultMap="deptResultMap">
+<!--    Dept getDeptByDeptId(@Param("deptId") int deptId);-->
+    <select id="getDeptByDeptId" resultMap="deptResultMap">
         select * from t_dept where dept_id = #{deptId}
     </select>
 

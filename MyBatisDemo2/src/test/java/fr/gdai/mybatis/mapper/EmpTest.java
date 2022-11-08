@@ -7,25 +7,33 @@ import org.junit.Test;
 
 import java.util.List;
 
-import static org.junit.Assert.*;
-
 public class EmpTest {
 
-        @Test
-        public void testGetAllEmp() {
-            SqlSession sqlSession = SqlSessionUtils.getSqlSession();
-            EmpMapper empMapper = sqlSession.getMapper(EmpMapper.class);
-            List<Emp> empList = empMapper.getAllEmp();
-            for (Emp e:empList) {
-                System.out.println(e);
-            }
-        }
-
     @Test
-    public void testGetAllEmpAndDept() {
+    public void testGetAllEmp() {
         SqlSession sqlSession = SqlSessionUtils.getSqlSession();
         EmpMapper empMapper = sqlSession.getMapper(EmpMapper.class);
-        List<Emp> empList = empMapper.getAllEmpAndDept();
+        List<Emp> empList = empMapper.getAllEmp();
+        for (Emp e:empList) {
+            System.out.println(e);
+        }
+    }
+
+    @Test
+    public void testGetAllEmpAndDept_Cascade() {
+        SqlSession sqlSession = SqlSessionUtils.getSqlSession();
+        EmpMapper empMapper = sqlSession.getMapper(EmpMapper.class);
+        List<Emp> empList = empMapper.getAllEmpAndDept_Cascade();
+        for (Emp e:empList) {
+            System.out.println(e.toString());
+        }
+    }
+
+    @Test
+    public void testGetAllEmpAndDept_Association() {
+        SqlSession sqlSession = SqlSessionUtils.getSqlSession();
+        EmpMapper empMapper = sqlSession.getMapper(EmpMapper.class);
+        List<Emp> empList = empMapper.getAllEmpAndDept_Association();
         for (Emp e:empList) {
             System.out.println(e.toString());
         }

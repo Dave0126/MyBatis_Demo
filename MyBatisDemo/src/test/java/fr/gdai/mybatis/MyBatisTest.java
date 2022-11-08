@@ -58,7 +58,7 @@ public class MyBatisTest {
     }
 
     @Test
-    public void testSelectUserBtId() throws IOException {
+    public void testSelectUserById() throws IOException {
         InputStream is = Resources.getResourceAsStream("myBatis-config.xml");
         SqlSessionFactory ssf = new SqlSessionFactoryBuilder().build(is);
         // 以上操作是重复的，所以我们将其拆分出来：fr.gdai.mybatis.utils.SqlSessionUtils
@@ -135,7 +135,7 @@ public class MyBatisTest {
         map.put("password", "admin");
         SqlSession sqlSession = SqlSessionUtils.getSqlSession();
         UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
-        User user = userMapper.selectUserByMap(map);
+        User user = userMapper.selectUserByUsernameAndPassword(map);
         System.out.println(user.toString());
     }
 

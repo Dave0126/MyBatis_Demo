@@ -74,9 +74,9 @@ public class DynamicSQLMapperTest {
         DynamicSQLMapper dynamicSQLMapper = sqlSession.getMapper(DynamicSQLMapper.class);
         DeptMapper deptMapper = sqlSession.getMapper(DeptMapper.class);
         List<Emp> empList = new ArrayList<>();
-        empList.add(new Emp(null, "calioppe", 22, "女", "calioppe@calioppe.com",deptMapper.getDeptBtDeptId(1)));
-        empList.add(new Emp(null, "david", 22, "男", "david@david.com", deptMapper.getDeptBtDeptId(1)));
-        empList.add(new Emp(null, "alex", 23, "男", "alex@alex.com",deptMapper.getDeptBtDeptId(2)));
+        empList.add(new Emp(null, "calioppe", 22, "女", "calioppe@calioppe.com",deptMapper.getDeptByDeptId(1)));
+        empList.add(new Emp(null, "david", 22, "男", "david@david.com", deptMapper.getDeptByDeptId(1)));
+        empList.add(new Emp(null, "alex", 23, "男", "alex@alex.com",deptMapper.getDeptByDeptId(2)));
         int result = dynamicSQLMapper.insertManyEmps(empList);
         System.out.println(result);
     }

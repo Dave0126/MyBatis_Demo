@@ -83,7 +83,7 @@
         <result property="empEmail" column="emp_email"/>
         <!-- 第 2 步查询 -->
         <association property="dept"
-                     select="fr.gdai.mybatis.mapper.DeptMapper.getDeptBtDeptId"
+                     select="fr.gdai.mybatis.mapper.DeptMapper.getDeptByDeptId"
                      column="dept_id"/>
     </resultMap>
 
